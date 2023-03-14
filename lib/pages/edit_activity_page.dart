@@ -31,6 +31,7 @@ class _AddEditActivityPageState extends State<AddEditActivityPage> {
     title = widget.activity?.title ?? '';
     description = widget.activity?.description ?? '';
     recordingFilePath = widget.activity?.audioPath ?? '';
+    newRecordingName = '';
   }
 
   @override
@@ -41,14 +42,13 @@ class _AddEditActivityPageState extends State<AddEditActivityPage> {
         body: Form(
           key: _formKey,
           child: ActivityFormWidget(
-            // nice attempt, but something is not working correctly.
-            // fileName isn't being given a value in SoundRecorder.
-            // database is storing the file path correctly.
+            // recieve file path for the recording.
             fullAudioFilePathCallBack: (p0) {
               setState(() {
-                // recordings/.wav + title.
                 recordingFilePath = p0;
-                newRecordingName = "$title-recording";
+
+                // set the recording name to the title.
+                newRecordingName = "$title-recording-${_formKey.hashCode}";
               });
             },
             title: title,
@@ -58,7 +58,7 @@ class _AddEditActivityPageState extends State<AddEditActivityPage> {
               // update this activity title to the new value.
               this.title = title;
 
-              newRecordingName = "$title-recording";
+              newRecordingName = "${this.title}-recording-${_formKey.hashCode}";
             }),
             onChangedDescription: (description) =>
                 setState(() => this.description = description),
@@ -88,6 +88,8 @@ class _AddEditActivityPageState extends State<AddEditActivityPage> {
     if (isValid) {
       final isUpdating = widget.activity != null;
 
+      // works for first creation of an activity.
+      // next step, make the name of the recording update with the new title.
       processRecording();
 
       if (isUpdating) {
@@ -103,6 +105,7 @@ class _AddEditActivityPageState extends State<AddEditActivityPage> {
   Future updateActivity() async {
     final activity = widget.activity!.copy(
       title: title,
+      audioPath: recordingFilePath,
     );
 
     await ActivityDatabase.instance.update(activity);
