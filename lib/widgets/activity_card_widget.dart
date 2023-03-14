@@ -39,7 +39,7 @@ class ActivityCardWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              activity.title,
+              "Activity ${index + 1}: ${activity.title}",
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.normal,

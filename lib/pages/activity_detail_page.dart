@@ -58,14 +58,14 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                     Text(
                       "Activity carried out at ${DateFormat.jm().format(activity.createdDate)}",
                     ),
-
-                    /*
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       activity.description,
-                      style: TextStyle(color: Colors.white70, fontSize: 18),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Audio filepath name: ${activity.audioPath}",
                     )
-                    */
                   ],
                 ),
               ),

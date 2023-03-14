@@ -32,7 +32,9 @@ class ActivityDatabase {
 CREATE TABLE $tableActivities (
   ${ActivityFields.id} $idType,
   ${ActivityFields.title} $textType,
-  ${ActivityFields.createdDate} $textType
+  ${ActivityFields.description} $textType,
+  ${ActivityFields.createdDate} $textType,
+  ${ActivityFields.audioPath} $textType
 )
 ''');
   }
