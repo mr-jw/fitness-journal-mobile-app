@@ -59,10 +59,7 @@ class _ActivityPageState extends State<ActivityPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Activities Page',
-            style: TextStyle(fontSize: 24),
-          ),
+          title: Text("Activities"),
         ),
         body: Center(
           child: isLoading
@@ -75,7 +72,6 @@ class _ActivityPageState extends State<ActivityPage> {
                   : buildActivities(),
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blue,
           child: const Icon(Icons.add),
           onPressed: () async {
             await Navigator.of(context).push(

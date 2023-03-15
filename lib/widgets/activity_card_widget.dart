@@ -24,25 +24,40 @@ class ActivityCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colour = Colors.amber.shade300;
+    final colour = Colors.white60;
 
     /// Pick colors from the accent colors based on index
     //final color = _lightColors[index % _lightColors.length];
 
     return Card(
-      color: colour,
+      color: Colors.white,
+      shape: const StadiumBorder(
+        side: BorderSide(
+          color: Colors.black,
+          width: 1.0,
+        ),
+      ),
       child: Container(
-        constraints: const BoxConstraints(minHeight: 75),
-        padding: const EdgeInsets.all(8),
+        margin: const EdgeInsets.symmetric(
+          horizontal: 20.0,
+          vertical: 5.0,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Activity ${index + 1}: ${activity.title}",
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.normal,
+          children: <Widget>[
+            ListTile(
+              leading: const Icon(
+                Icons.fitness_center_sharp,
+                color: Colors.black,
+                size: 25,
+              ),
+              title: Text(
+                activity.title,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
