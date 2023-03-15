@@ -90,7 +90,7 @@ class _AddEditActivityPageState extends State<AddEditActivityPage> {
 
       // works for first creation of an activity.
       // next step, make the name of the recording update with the new title.
-      processRecording();
+      updateRecordingName();
 
       if (isUpdating) {
         await updateActivity();
@@ -121,7 +121,7 @@ class _AddEditActivityPageState extends State<AddEditActivityPage> {
     await ActivityDatabase.instance.create(activity);
   }
 
-  Future processRecording() {
+  Future updateRecordingName() {
     File recording = File(recordingFilePath);
     return changeFileNameOnly(recording, newRecordingName);
   }

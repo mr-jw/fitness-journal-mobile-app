@@ -49,7 +49,7 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 35),
+              const SizedBox(height: 20),
               const Text(
                 "Record your Log",
                 textAlign: TextAlign.center,
