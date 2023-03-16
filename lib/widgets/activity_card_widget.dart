@@ -1,16 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/model/activity.dart';
-
-/*
-final _lightColors = [
-  Colors.amber.shade300,
-  Colors.lightGreen.shade300,
-  Colors.lightBlue.shade300,
-  Colors.orange.shade300,
-  Colors.pinkAccent.shade100,
-  Colors.tealAccent.shade100
-];
-*/
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ActivityCardWidget extends StatelessWidget {
   const ActivityCardWidget({
@@ -24,44 +14,40 @@ class ActivityCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colour = Colors.white60;
-
-    /// Pick colors from the accent colors based on index
-    //final color = _lightColors[index % _lightColors.length];
-
     return Card(
       color: Colors.white,
-      shape: const StadiumBorder(
-        side: BorderSide(
-          color: Colors.black,
-          width: 1.0,
-        ),
+      shape: RoundedRectangleBorder(
+        side: const BorderSide(color: Colors.black, width: 0.8),
+        borderRadius: BorderRadius.circular(15),
       ),
-      child: Container(
-        margin: const EdgeInsets.symmetric(
-          horizontal: 20.0,
-          vertical: 5.0,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            ListTile(
-              leading: const Icon(
-                Icons.fitness_center_sharp,
-                color: Colors.black,
-                size: 25,
-              ),
-              title: Text(
-                activity.title,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ListTile(
+            leading: const Icon(
+              Icons.fitness_center_rounded,
+              color: Colors.black,
+              size: 40,
+            ),
+            title: Text(
+              activity.title,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ],
-        ),
+            subtitle: RatingBarIndicator(
+              rating: activity.mood,
+              itemBuilder: (context, index) =>
+                  Image.asset('assets/images/indicator.png'),
+              itemCount: 5,
+              itemSize: 20.0,
+              itemPadding:
+                  const EdgeInsets.symmetric(horizontal: 2.0, vertical: 2.0),
+              direction: Axis.horizontal,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:fitness_tracker/api/sound_recorder.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 
 class ActivityFormWidget extends StatefulWidget {
   final Function(String) fullAudioFilePathCallBack;
+  final Function(double) moodletWidgetCallBack;
+
+  // attributes to be validated upon creation or change.
   final String? title;
   final String? description;
   final ValueChanged<String> onChangedTitle;
@@ -18,6 +20,7 @@ class ActivityFormWidget extends StatefulWidget {
     required this.onChangedTitle,
     required this.onChangedDescription,
     required this.fullAudioFilePathCallBack,
+    required this.moodletWidgetCallBack,
   }) : super(key: key);
 
   @override
@@ -64,6 +67,8 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
               audioRecorderWidget(),
               const SizedBox(height: 35),
               buildDescription(),
+              const SizedBox(height: 35),
+              buildMood(),
             ],
           ),
         ),
@@ -102,6 +107,40 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
             icon,
             size: 40.0,
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildMood() {
+    return Column(
+      children: [
+        const Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "On a scale of 1-5, how did you feel?",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
+          ),
+        ),
+        const SizedBox(height: 35),
+        RatingBar(
+          initialRating: 3,
+          direction: Axis.horizontal,
+          allowHalfRating: true,
+          itemCount: 5,
+          ratingWidget: RatingWidget(
+            full: Image.asset('assets/images/indicator.png'),
+            half: Image.asset('assets/images/indicator-half.png'),
+            empty: Image.asset('assets/images/indicator-empty.png'),
+          ),
+          itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+          onRatingUpdate: (mood) {
+            print(mood);
+            widget.moodletWidgetCallBack(mood);
+          },
         ),
       ],
     );

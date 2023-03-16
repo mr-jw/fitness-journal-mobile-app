@@ -36,25 +36,27 @@ class _ActivityPageState extends State<ActivityPage> {
     setState(() => isLoading = false);
   }
 
-  Widget buildActivities() => ListView.builder(
-        padding: const EdgeInsets.all(8),
-        itemCount: activities.length,
-        itemBuilder: (context, index) {
-          final activity = activities[index];
+  Widget buildActivities() => ListView.separated(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      itemCount: activities.length,
+      itemBuilder: (context, index) {
+        final activity = activities[index];
 
-          return GestureDetector(
-            onTap: () async {
-              await Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    ActivityDetailPage(activityId: activity.id!),
-              ));
+        return GestureDetector(
+          onTap: () async {
+            await Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) =>
+                  ActivityDetailPage(activityId: activity.id!),
+            ));
 
-              refreshActivities();
-            },
-            child: ActivityCardWidget(activity: activity, index: index),
-          );
-        },
-      );
+            refreshActivities();
+          },
+          child: ActivityCardWidget(activity: activity, index: index),
+        );
+      },
+      separatorBuilder: (context, index) => const SizedBox(
+            height: 1,
+          ));
 
   @override
   Widget build(BuildContext context) => Scaffold(
