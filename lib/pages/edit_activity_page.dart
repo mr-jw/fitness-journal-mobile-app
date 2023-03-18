@@ -20,7 +20,7 @@ class _AddEditActivityPageState extends State<AddEditActivityPage> {
   final _formKey = GlobalKey<FormState>();
   late String title;
   late String description;
-
+  late double mood;
   late String recordingFilePath;
   late String newRecordingName;
 
@@ -30,7 +30,9 @@ class _AddEditActivityPageState extends State<AddEditActivityPage> {
 
     title = widget.activity?.title ?? '';
     description = widget.activity?.description ?? '';
-    recordingFilePath = widget.activity?.audioPath ?? '';
+    recordingFilePath = widget.activity?.audio ?? '';
+    mood = widget.activity?.mood ?? 0;
+
     newRecordingName = '';
   }
 
@@ -49,6 +51,11 @@ class _AddEditActivityPageState extends State<AddEditActivityPage> {
 
                 // set the recording name to the title.
                 newRecordingName = "$title-recording-${_formKey.hashCode}";
+              });
+            },
+            moodletWidgetCallBack: (p0) {
+              setState(() {
+                mood = p0;
               });
             },
             title: title,
@@ -105,7 +112,8 @@ class _AddEditActivityPageState extends State<AddEditActivityPage> {
   Future updateActivity() async {
     final activity = widget.activity!.copy(
       title: title,
-      audioPath: recordingFilePath,
+      audio: recordingFilePath,
+      mood: mood,
     );
 
     await ActivityDatabase.instance.update(activity);
@@ -113,10 +121,12 @@ class _AddEditActivityPageState extends State<AddEditActivityPage> {
 
   Future addActivity() async {
     final activity = Activity(
-        title: title,
-        description: description,
-        createdDate: DateTime.now(),
-        audioPath: recordingFilePath);
+      title: title,
+      description: description,
+      date: DateTime.now(),
+      audio: recordingFilePath,
+      mood: mood,
+    );
 
     await ActivityDatabase.instance.create(activity);
   }

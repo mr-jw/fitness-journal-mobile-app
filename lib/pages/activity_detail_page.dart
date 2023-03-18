@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:fitness_tracker/pages/edit_activity_page.dart';
 import 'package:fitness_tracker/db/activity_database.dart';
@@ -92,7 +93,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      "Activity carried out at ${DateFormat.jm().format(activity.createdDate)}",
+                      "Activity carried out at ${DateFormat.jm().format(activity.date)}",
                     ),
                     const SizedBox(height: 35),
                     Text(
@@ -105,56 +106,101 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                       style: TextStyle(color: Colors.red),
                     ),
                     */
-                    const SizedBox(height: 35),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${activity.title} recording',
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                    Slider(
-                      activeColor: Colors.green.shade300,
-                      inactiveColor: Colors.green.shade100,
-                      min: 0,
-                      max: duration.inSeconds.toDouble(),
-                      value: position.inSeconds.toDouble(),
-                      onChanged: (value) async {
-                        final position = Duration(seconds: value.toInt());
-                        await audioPlayer.seek(position);
-
-                        await audioPlayer.resume();
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(formatTime(position)),
-                          Text(formatTime(duration - position)),
-                        ],
-                      ),
-                    ),
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.green.shade300,
-                      foregroundColor: Colors.white,
-                      child: IconButton(
-                        icon: Icon(
-                          isPlaying ? Icons.pause : Icons.play_arrow,
-                        ),
-                        onPressed: () async {
-                          if (isPlaying) {
-                            await audioPlayer.pause();
-                          } else {
-                            await audioPlayer.resume();
-                          }
-                        },
-                      ),
-                    )
+                    audioPlaybackWidget(),
+                    const SizedBox(height: 50),
+                    viewMoodWidget(),
                   ],
                 ),
               ),
       );
+
+  Widget audioPlaybackWidget() {
+    return Column(
+      children: [
+        const SizedBox(height: 35),
+        const SizedBox(height: 4),
+        Text(
+          '${activity.title} recording',
+          style: const TextStyle(fontSize: 20),
+        ),
+        Slider(
+          activeColor: Colors.green.shade300,
+          inactiveColor: Colors.green.shade100,
+          min: 0,
+          max: duration.inSeconds.toDouble(),
+          value: position.inSeconds.toDouble(),
+          onChanged: (value) async {
+            final position = Duration(seconds: value.toInt());
+            await audioPlayer.seek(position);
+
+            await audioPlayer.resume();
+          },
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(formatTime(position)),
+              Text(formatTime(duration - position)),
+            ],
+          ),
+        ),
+        CircleAvatar(
+          radius: 30,
+          backgroundColor: Colors.green.shade300,
+          foregroundColor: Colors.white,
+          child: IconButton(
+            icon: Icon(
+              isPlaying ? Icons.pause : Icons.play_arrow,
+            ),
+            onPressed: () async {
+              if (isPlaying) {
+                await audioPlayer.pause();
+              } else {
+                await audioPlayer.resume();
+              }
+            },
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget viewMoodWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          "How you felt after this activity...",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
+        ),
+        const SizedBox(height: 25),
+        RatingBarIndicator(
+          rating: activity.mood,
+          itemBuilder: (context, index) =>
+              Image.asset('assets/images/indicator.png'),
+          itemCount: 5,
+          itemSize: 50.0,
+          itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+          direction: Axis.horizontal,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text("Not great"),
+              Text("Excellent"),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
   String formatTime(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
@@ -171,7 +217,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
 
   Future setAudio() async {
     audioPlayer.setReleaseMode(ReleaseMode.stop);
-    String audioPath = activity.audioPath;
+    String audioPath = activity.audio;
     final file = File(audioPath);
     audioPlayer.setSourceUrl(file.path);
   }
@@ -198,7 +244,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
       );
 
   Future deleteRecording() {
-    File recording = File(activity.audioPath);
+    File recording = File(activity.audio);
     return deleteFile(recording);
   }
 

@@ -25,16 +25,18 @@ class ActivityDatabase {
   }
 
   Future _createDB(Database db, int version) async {
-    final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-    final textType = 'TEXT NOT NULL';
+    const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    const textType = 'TEXT NOT NULL';
+    const doubleType = 'DOUBLE NOT NULL';
 
     db.execute('''
 CREATE TABLE $tableActivities (
   ${ActivityFields.id} $idType,
   ${ActivityFields.title} $textType,
   ${ActivityFields.description} $textType,
-  ${ActivityFields.createdDate} $textType,
-  ${ActivityFields.audioPath} $textType
+  ${ActivityFields.date} $textType,
+  ${ActivityFields.audio} $textType,
+  ${ActivityFields.mood} $doubleType
 )
 ''');
   }
