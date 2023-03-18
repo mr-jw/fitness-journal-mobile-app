@@ -171,7 +171,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
+        const Text(
           "How you felt after this activity...",
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -185,8 +185,18 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
               Image.asset('assets/images/indicator.png'),
           itemCount: 5,
           itemSize: 50.0,
-          itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+          itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
           direction: Axis.horizontal,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text("Not great"),
+              Text("Excellent"),
+            ],
+          ),
         ),
       ],
     );

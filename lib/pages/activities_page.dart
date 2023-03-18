@@ -1,9 +1,12 @@
+import 'package:fitness_tracker/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/widgets/activity_card_widget.dart';
 import 'package:fitness_tracker/model/activity.dart';
 import 'package:fitness_tracker/db/activity_database.dart';
 import 'package:fitness_tracker/pages/edit_activity_page.dart';
 import 'package:fitness_tracker/pages/activity_detail_page.dart';
+
+import 'analytics_page.dart';
 
 class ActivityPage extends StatefulWidget {
   const ActivityPage({Key? key}) : super(key: key);
@@ -13,8 +16,24 @@ class ActivityPage extends StatefulWidget {
 }
 
 class _ActivityPageState extends State<ActivityPage> {
-  late List<Activity> activities;
-  bool isLoading = false;
+  // database communication variables.
+  late List<Activity> _activities;
+  bool _isLoading = false;
+
+  // page naivgation variables.
+  static const List<Widget> _pages = <Widget>[
+    ActivityPage(),
+    AnalyticsPage(),
+    SettingsPage(),
+  ];
+
+  int _selectedIndex = 0;
+  void onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -29,18 +48,18 @@ class _ActivityPageState extends State<ActivityPage> {
   }
 
   Future refreshActivities() async {
-    setState(() => isLoading = true);
+    setState(() => _isLoading = true);
 
-    activities = await ActivityDatabase.instance.readAllActivities();
+    _activities = await ActivityDatabase.instance.readAllActivities();
 
-    setState(() => isLoading = false);
+    setState(() => _isLoading = false);
   }
 
   Widget buildActivities() => ListView.separated(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-      itemCount: activities.length,
+      itemCount: _activities.length,
       itemBuilder: (context, index) {
-        final activity = activities[index];
+        final activity = _activities[index];
 
         return GestureDetector(
           onTap: () async {
@@ -58,20 +77,29 @@ class _ActivityPageState extends State<ActivityPage> {
             height: 1,
           ));
 
+  /*
+  IndexedStack(
+  index: _selectedIndex,
+  children: _pages,
+)
+*/
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text("Activities"),
         ),
         body: Center(
-          child: isLoading
-              ? const CircularProgressIndicator()
-              : activities.isEmpty
-                  ? const Text(
-                      'No Activities.',
-                      style: TextStyle(color: Colors.white, fontSize: 24),
-                    )
-                  : buildActivities(),
+          child: _selectedIndex != 0
+              ? _pages.elementAt(_selectedIndex)
+              : _isLoading
+                  ? const CircularProgressIndicator()
+                  : _activities.isEmpty
+                      ? const Text(
+                          'No Activities.',
+                          style: TextStyle(color: Colors.black, fontSize: 24),
+                        )
+                      : buildActivities(),
         ),
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
@@ -83,6 +111,27 @@ class _ActivityPageState extends State<ActivityPage> {
 
             refreshActivities();
           },
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          iconSize: 25,
+          backgroundColor: Colors.green.shade300,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.fitness_center),
+              label: 'Activities',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.bar_chart),
+              label: 'Analytics',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Settings',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.white,
+          onTap: onItemTapped,
         ),
       );
 }

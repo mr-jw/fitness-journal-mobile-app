@@ -52,7 +52,7 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 20),
+              const SizedBox(height: 5),
               const Text(
                 "Record your Log",
                 textAlign: TextAlign.center,
@@ -61,13 +61,13 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 35),
+              const SizedBox(height: 25),
               buildTitle(),
-              const SizedBox(height: 35),
+              const SizedBox(height: 25),
               audioRecorderWidget(),
-              const SizedBox(height: 35),
+              const SizedBox(height: 25),
               buildDescription(),
-              const SizedBox(height: 35),
+              const SizedBox(height: 25),
               buildMood(),
             ],
           ),
@@ -90,7 +90,7 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
             ),
           ),
         ),
-        const SizedBox(height: 35),
+        const SizedBox(height: 25),
         RawMaterialButton(
           onPressed: () async {
             await soundRecorder.toggleRecording();
@@ -105,7 +105,7 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
           shape: const CircleBorder(),
           child: Icon(
             icon,
-            size: 40.0,
+            size: 30.0,
           ),
         ),
       ],
@@ -125,12 +125,13 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
             ),
           ),
         ),
-        const SizedBox(height: 35),
+        const SizedBox(height: 20),
         RatingBar(
           initialRating: 3,
           direction: Axis.horizontal,
           allowHalfRating: true,
           itemCount: 5,
+          itemSize: 50.0,
           ratingWidget: RatingWidget(
             full: Image.asset('assets/images/indicator.png'),
             half: Image.asset('assets/images/indicator-half.png'),
@@ -141,6 +142,16 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
             print(mood);
             widget.moodletWidgetCallBack(mood);
           },
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text("Not great"),
+              Text("Excellent"),
+            ],
+          ),
         ),
       ],
     );
@@ -166,7 +177,7 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
   }
 
   Widget buildDescription() => TextFormField(
-        maxLines: 25,
+        maxLines: 15,
         initialValue: widget.description,
         textCapitalization: TextCapitalization.sentences,
         style: const TextStyle(
