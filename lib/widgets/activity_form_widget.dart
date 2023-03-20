@@ -10,10 +10,10 @@ class ActivityFormWidget extends StatefulWidget {
 
   // attributes to be validated upon creation or change.
   final String? title;
-  String? description;
+  final String? description;
   final ValueChanged<String> onChangedTitle;
 
-  ActivityFormWidget({
+  const ActivityFormWidget({
     Key? key,
     this.title = '',
     this.description = '',
@@ -45,6 +45,7 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
   void dispose() {
     super.dispose();
     soundRecorder.dispose();
+    GlobalVar.descriptionController.clear();
   }
 
   @override
@@ -122,7 +123,7 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
 
     // some sort of check to see if the audio transcriber has stopped.
 
-    widget.description = GlobalVar.descriptionController.text =
+    GlobalVar.descriptionController.text =
         audioTranscriber.getTranscribedMessage();
   }
 
@@ -151,9 +152,8 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
             half: Image.asset('assets/images/indicator-half.png'),
             empty: Image.asset('assets/images/indicator-empty.png'),
           ),
-          itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+          itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
           onRatingUpdate: (mood) {
-            print(mood);
             widget.moodletWidgetCallBack(mood);
           },
         ),

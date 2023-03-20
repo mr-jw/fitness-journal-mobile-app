@@ -16,6 +16,7 @@ class ActivityPage extends StatefulWidget {
 }
 
 class _ActivityPageState extends State<ActivityPage> {
+  String _appBarTitle = "Activities";
   // database communication variables.
   late List<Activity> _activities;
   bool _isLoading = false;
@@ -30,6 +31,14 @@ class _ActivityPageState extends State<ActivityPage> {
   int _selectedIndex = 0;
   void onItemTapped(int index) {
     setState(() {
+      if (index == 0) {
+        _appBarTitle = "Activities";
+      } else if (index == 1) {
+        _appBarTitle = "Analytics";
+      } else {
+        _appBarTitle = "Settings";
+      }
+
       _selectedIndex = index;
     });
   }
@@ -77,17 +86,10 @@ class _ActivityPageState extends State<ActivityPage> {
             height: 1,
           ));
 
-  /*
-  IndexedStack(
-  index: _selectedIndex,
-  children: _pages,
-)
-*/
-
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text("Activities"),
+          title: Text(_appBarTitle),
         ),
         body: Center(
           child: _selectedIndex != 0
