@@ -31,7 +31,7 @@ class _AddEditActivityPageState extends State<AddEditActivityPage> {
     title = widget.activity?.title ?? '';
     description = widget.activity?.description ?? '';
     recordingFilePath = widget.activity?.audio ?? '';
-    mood = widget.activity?.mood ?? 0;
+    mood = widget.activity?.mood ?? 3;
 
     newRecordingName = '';
   }
@@ -112,6 +112,7 @@ class _AddEditActivityPageState extends State<AddEditActivityPage> {
   Future updateActivity() async {
     final activity = widget.activity!.copy(
       title: title,
+      description: description,
       audio: recordingFilePath,
       mood: mood,
     );

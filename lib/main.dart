@@ -26,6 +26,6 @@ class MyApp extends StatelessWidget {
           ),
         ),
         title: title,
-        home: ActivityPage(),
+        home: const ActivityPage(),
       );
 }

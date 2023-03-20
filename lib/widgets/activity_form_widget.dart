@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:speech_to_text/speech_to_text.dart';
 import 'package:fitness_tracker/api/sound_recorder.dart';
+import 'package:fitness_tracker/api/audio_transcriber.dart';
 
 class ActivityFormWidget extends StatefulWidget {
   final Function(String) fullAudioFilePathCallBack;
@@ -29,6 +29,9 @@ class ActivityFormWidget extends StatefulWidget {
 
 class _ActivityFormWidgetState extends State<ActivityFormWidget> {
   final soundRecorder = SoundRecorder();
+  final audioTranscriber = AudioTranscriber();
+
+  TextEditingController descriptionController = TextEditingController();
 
   @override
   void initState() {
@@ -43,6 +46,7 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
   void dispose() {
     super.dispose();
     soundRecorder.dispose();
+    descriptionController.dispose();
   }
 
   @override
@@ -64,7 +68,7 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
               const SizedBox(height: 25),
               buildTitle(),
               const SizedBox(height: 25),
-              audioRecorderWidget(),
+              buildAudioRecording(),
               const SizedBox(height: 25),
               buildDescription(),
               const SizedBox(height: 25),
@@ -74,7 +78,7 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
         ),
       );
 
-  Widget audioRecorderWidget() {
+  Widget buildAudioRecording() {
     var isRecording = soundRecorder.isRecording;
     var icon = isRecording ? Icons.stop : Icons.mic;
 
@@ -96,6 +100,7 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
             await soundRecorder.toggleRecording();
             isRecording = soundRecorder.isRecording;
             setState(() {});
+
             // pass the recording file path back to edit activity page.
             widget.fullAudioFilePathCallBack(soundRecorder.getCompletePath());
           },
@@ -110,6 +115,15 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
         ),
       ],
     );
+  }
+
+  Future buildAudioTranscription() async {
+    // pass the recording file path to the audio transcriber.
+    // transcribe message.
+    await audioTranscriber.transcribe(soundRecorder.getCompletePath());
+
+    // some sort of check to see if the audio transcriber has stopped.
+    descriptionController.text = audioTranscriber.getTranscribedMessage();
   }
 
   Widget buildMood() {
@@ -176,21 +190,27 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
     );
   }
 
-  Widget buildDescription() => TextFormField(
-        maxLines: 15,
-        initialValue: widget.description,
-        textCapitalization: TextCapitalization.sentences,
-        style: const TextStyle(
-          fontWeight: FontWeight.normal,
-          fontSize: 12,
-        ),
-        decoration: const InputDecoration(
-          border: OutlineInputBorder(),
-          hintText: 'Enter a description, or speak to generate one...',
-        ),
-        validator: (title) => title != null && title.isEmpty
-            ? 'The description cannot be empty'
-            : null,
-        onChanged: widget.onChangedDescription,
-      );
+  Widget buildDescription() {
+    // this is working to update the description form
+    // but the value needs to be passed back as onChangeDescription.
+    buildAudioTranscription();
+
+    return TextFormField(
+      initialValue: widget.description,
+      maxLines: 15,
+      textCapitalization: TextCapitalization.sentences,
+      style: const TextStyle(
+        fontWeight: FontWeight.normal,
+        fontSize: 12,
+      ),
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        hintText: 'Enter a description, or speak to generate one...',
+      ),
+      validator: (description) => description != null && description.isEmpty
+          ? 'The description cannot be empty'
+          : null,
+      onChanged: widget.onChangedDescription,
+    );
+  }
 }
