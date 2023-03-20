@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fitness_tracker/api/sound_recorder.dart';
 import 'package:fitness_tracker/api/audio_transcriber.dart';
+import 'package:fitness_tracker/api/text_editor_controller.dart';
 
 class ActivityFormWidget extends StatefulWidget {
   final Function(String) fullAudioFilePathCallBack;
@@ -9,16 +10,14 @@ class ActivityFormWidget extends StatefulWidget {
 
   // attributes to be validated upon creation or change.
   final String? title;
-  final String? description;
+  String? description;
   final ValueChanged<String> onChangedTitle;
-  final ValueChanged<String> onChangedDescription;
 
-  const ActivityFormWidget({
+  ActivityFormWidget({
     Key? key,
     this.title = '',
     this.description = '',
     required this.onChangedTitle,
-    required this.onChangedDescription,
     required this.fullAudioFilePathCallBack,
     required this.moodletWidgetCallBack,
   }) : super(key: key);
@@ -31,11 +30,11 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
   final soundRecorder = SoundRecorder();
   final audioTranscriber = AudioTranscriber();
 
-  TextEditingController descriptionController = TextEditingController();
-
   @override
   void initState() {
     super.initState();
+
+    GlobalVar.descriptionController.text = widget.description.toString();
 
     // set the file name to a temporary name, initialise the sound recorder.
     soundRecorder.setFileName("tmpActivityRecording");
@@ -46,7 +45,6 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
   void dispose() {
     super.dispose();
     soundRecorder.dispose();
-    descriptionController.dispose();
   }
 
   @override
@@ -123,7 +121,9 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
     await audioTranscriber.transcribe(soundRecorder.getCompletePath());
 
     // some sort of check to see if the audio transcriber has stopped.
-    descriptionController.text = audioTranscriber.getTranscribedMessage();
+
+    widget.description = GlobalVar.descriptionController.text =
+        audioTranscriber.getTranscribedMessage();
   }
 
   Widget buildMood() {
@@ -195,22 +195,25 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
     // but the value needs to be passed back as onChangeDescription.
     buildAudioTranscription();
 
-    return TextFormField(
-      initialValue: widget.description,
-      maxLines: 15,
-      textCapitalization: TextCapitalization.sentences,
-      style: const TextStyle(
-        fontWeight: FontWeight.normal,
-        fontSize: 12,
-      ),
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        hintText: 'Enter a description, or speak to generate one...',
-      ),
-      validator: (description) => description != null && description.isEmpty
-          ? 'The description cannot be empty'
-          : null,
-      onChanged: widget.onChangedDescription,
+    return Column(
+      children: [
+        TextFormField(
+          controller: GlobalVar.descriptionController,
+          maxLines: 15,
+          textCapitalization: TextCapitalization.sentences,
+          style: const TextStyle(
+            fontWeight: FontWeight.normal,
+            fontSize: 12,
+          ),
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Enter a description, or speak to generate one...',
+          ),
+          validator: (description) => description != null && description.isEmpty
+              ? 'The description cannot be empty'
+              : null,
+        ),
+      ],
     );
   }
 }

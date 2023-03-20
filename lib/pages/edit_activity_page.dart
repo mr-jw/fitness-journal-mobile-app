@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fitness_tracker/widgets/activity_form_widget.dart';
 import 'package:fitness_tracker/db/activity_database.dart';
 import 'package:fitness_tracker/model/activity.dart';
+import 'package:fitness_tracker/api/text_editor_controller.dart';
 
 class AddEditActivityPage extends StatefulWidget {
   final Activity? activity;
@@ -37,6 +38,11 @@ class _AddEditActivityPageState extends State<AddEditActivityPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           actions: [buildButton()],
@@ -67,8 +73,6 @@ class _AddEditActivityPageState extends State<AddEditActivityPage> {
 
               newRecordingName = "${this.title}-recording-${_formKey.hashCode}";
             }),
-            onChangedDescription: (description) =>
-                setState(() => this.description = description),
           ),
         ),
       );
@@ -112,7 +116,7 @@ class _AddEditActivityPageState extends State<AddEditActivityPage> {
   Future updateActivity() async {
     final activity = widget.activity!.copy(
       title: title,
-      description: description,
+      description: GlobalVar.descriptionController.text,
       audio: recordingFilePath,
       mood: mood,
     );
@@ -123,7 +127,7 @@ class _AddEditActivityPageState extends State<AddEditActivityPage> {
   Future addActivity() async {
     final activity = Activity(
       title: title,
-      description: description,
+      description: GlobalVar.descriptionController.text,
       date: DateTime.now(),
       audio: recordingFilePath,
       mood: mood,
