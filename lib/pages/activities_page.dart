@@ -5,6 +5,7 @@ import 'package:fitness_tracker/model/activity.dart';
 import 'package:fitness_tracker/db/activity_database.dart';
 import 'package:fitness_tracker/pages/edit_activity_page.dart';
 import 'package:fitness_tracker/pages/activity_detail_page.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 import 'analytics_page.dart';
 
@@ -64,45 +65,58 @@ class _ActivityPageState extends State<ActivityPage> {
     setState(() => _isLoading = false);
   }
 
-  Widget buildActivities() => ListView.separated(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-      itemCount: _activities.length,
-      itemBuilder: (context, index) {
-        final activity = _activities[index];
+  Widget activitiesPageContent() {
+    return Column(
+      children: [
+        Expanded(
+          child: _isLoading
+              ? const CircularProgressIndicator()
+              : _activities.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'No Activities.',
+                        style: TextStyle(color: Colors.black, fontSize: 24),
+                      ),
+                    )
+                  : buildActivities(),
+        ),
+      ],
+    );
+  }
 
-        return GestureDetector(
-          onTap: () async {
-            await Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) =>
-                  ActivityDetailPage(activityId: activity.id!),
-            ));
+  ListView buildActivities() => ListView.separated(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        itemCount: _activities.length,
+        itemBuilder: (context, index) {
+          final activity = _activities[index];
 
-            refreshActivities();
-          },
-          child: ActivityCardWidget(activity: activity, index: index),
-        );
-      },
-      separatorBuilder: (context, index) => const SizedBox(
-            height: 1,
-          ));
+          return GestureDetector(
+            onTap: () async {
+              await Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    ActivityDetailPage(activityId: activity.id!),
+              ));
+
+              refreshActivities();
+            },
+            child: ActivityCardWidget(activity: activity, index: index),
+          );
+        },
+        separatorBuilder: (context, index) => const SizedBox(
+          height: 1,
+        ),
+      );
 
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text(_appBarTitle),
         ),
-        body: Center(
-          child: _selectedIndex != 0
-              ? _pages.elementAt(_selectedIndex)
-              : _isLoading
-                  ? const CircularProgressIndicator()
-                  : _activities.isEmpty
-                      ? const Text(
-                          'No Activities.',
-                          style: TextStyle(color: Colors.black, fontSize: 24),
-                        )
-                      : buildActivities(),
-        ),
+        body: _selectedIndex != 0
+            ? _pages.elementAt(_selectedIndex)
+            : activitiesPageContent(),
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
           onPressed: () async {

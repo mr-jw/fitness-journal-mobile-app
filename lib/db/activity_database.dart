@@ -73,16 +73,6 @@ CREATE TABLE $tableActivities (
     return result.map((json) => Activity.fromJSON(json)).toList();
   }
 
-  Future<List<Activity>> readActivitiesForCurrentDay() async {
-    final db = await instance.database;
-
-    final result = await db.query(
-      tableActivities,
-    );
-
-    return result.map((json) => Activity.fromJSON(json)).toList();
-  }
-
   Future<int> update(Activity activity) async {
     final db = await instance.database;
 
