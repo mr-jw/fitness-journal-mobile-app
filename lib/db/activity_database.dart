@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:fitness_tracker/model/activity.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class ActivityDatabase {
   static final ActivityDatabase instance = ActivityDatabase._init();
@@ -73,11 +74,16 @@ CREATE TABLE $tableActivities (
     return result.map((json) => Activity.fromJSON(json)).toList();
   }
 
-  Future<List<Activity>> readActivitiesForCurrentDay() async {
+  Future<List<Activity>> readActivitiesFromDate(DateTime date) async {
     final db = await instance.database;
+
+    String dateQuery = date.toIso8601String();
 
     final result = await db.query(
       tableActivities,
+      columns: ActivityFields.values,
+      where: '${ActivityFields.date} = ?',
+      whereArgs: [dateQuery],
     );
 
     return result.map((json) => Activity.fromJSON(json)).toList();

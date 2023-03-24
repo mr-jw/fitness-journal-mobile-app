@@ -18,8 +18,9 @@ dependencies:
   flutter_sound_lite: ^8.5.0
   audioplayers: ^3.0.1
   path_provider: ^2.0.13
-  speech_to_text: ^6.1.1
   table_calendar: ^3.0.9
+  google_speech: ^2.1.2
+  fl_chart: ^0.61.0
 
 dev_dependencies:
   flutter_test:
@@ -29,4 +30,5 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/
+    - assets/service_account/
   uses-material-design: true

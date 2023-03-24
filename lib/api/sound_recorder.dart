@@ -10,6 +10,7 @@ class SoundRecorder {
   FlutterSoundRecorder? _audioRecorder;
   bool _isRecorderInitialised = false;
   bool get isRecording => _audioRecorder!.isRecording;
+  bool finishedRecording = false;
 
   // file storage attributes.
   String completePath = "";
@@ -40,6 +41,7 @@ class SoundRecorder {
 
     // initialisation complete...
     _isRecorderInitialised = true;
+    finishedRecording = false;
   }
 
   void dispose() {
@@ -65,10 +67,16 @@ class SoundRecorder {
 
   Future toggleRecording() async {
     if (_audioRecorder!.isStopped) {
+      finishedRecording = false;
       await record();
     } else {
+      finishedRecording = true;
       await stop();
     }
+  }
+
+  bool hasFinishedRecording() {
+    return finishedRecording;
   }
 
   // ----- FILE STORAGE -----
