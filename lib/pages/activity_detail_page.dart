@@ -79,126 +79,219 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
         ),
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
-            : Padding(
-                padding: const EdgeInsets.all(20),
-                child: ListView(
-                  children: [
-                    const SizedBox(height: 20),
-                    Text(
-                      activity.title,
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Activity carried out at ${DateFormat.jm().format(activity.date)}",
-                    ),
-                    const SizedBox(height: 35),
-                    Text(
-                      activity.description,
-                    ),
-                    /*
-                    const SizedBox(height: 35),
-                    Text(
-                      "DEBUG - Audio filepath name: ${activity.audioPath}",
-                      style: TextStyle(color: Colors.red),
-                    ),
-                    */
-                    audioPlaybackWidget(),
-                    const SizedBox(height: 50),
-                    viewMoodWidget(),
-                  ],
-                ),
+            : ListView(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  title(),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                  ),
+                  displayTimeOfCreation(),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                  ),
+                  displayDescription(),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                  ),
+                  audioPlaybackWidget(),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  ),
+                  viewMoodWidget(),
+                ],
               ),
       );
 
-  Widget audioPlaybackWidget() {
-    return Column(
-      children: [
-        const SizedBox(height: 35),
-        const SizedBox(height: 4),
-        Text(
-          '${activity.title} recording',
-          style: const TextStyle(fontSize: 20),
+  ListTile title() {
+    return ListTile(
+      title: Text(
+        "${activity.title}",
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
         ),
-        Slider(
-          activeColor: Colors.green.shade300,
-          inactiveColor: Colors.green.shade100,
-          min: 0,
-          max: duration.inSeconds.toDouble(),
-          value: position.inSeconds.toDouble(),
-          onChanged: (value) async {
-            final position = Duration(seconds: value.toInt());
-            await audioPlayer.seek(position);
-
-            await audioPlayer.resume();
-          },
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(formatTime(position)),
-              Text(formatTime(duration - position)),
-            ],
-          ),
-        ),
-        CircleAvatar(
-          radius: 30,
-          backgroundColor: Colors.green.shade300,
-          foregroundColor: Colors.white,
-          child: IconButton(
-            icon: Icon(
-              isPlaying ? Icons.pause : Icons.play_arrow,
-            ),
-            onPressed: () async {
-              if (isPlaying) {
-                await audioPlayer.pause();
-              } else {
-                await audioPlayer.resume();
-              }
-            },
-          ),
-        )
-      ],
+      ),
     );
   }
 
-  Widget viewMoodWidget() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text(
-          "How you felt after this activity...",
+  ListTile displayTimeOfCreation() {
+    return ListTile(
+      leading: const Icon(
+        Icons.alarm,
+        color: Colors.black,
+        size: 35,
+      ),
+      title: const Text(
+        "Created on",
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      ),
+      subtitle: Text(
+        "${DateFormat.MMMMEEEEd().format(activity.date)} \n${DateFormat.jm().format(activity.date)}",
+        style: const TextStyle(
+          fontSize: 15,
+          color: Colors.black,
+        ),
+      ),
+    );
+  }
+
+  ListTile displayDescription() {
+    return ListTile(
+      leading: const Icon(
+        Icons.text_snippet_outlined,
+        color: Colors.black,
+        size: 35,
+      ),
+      title: const Text(
+        "Description",
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      ),
+      subtitle: Text(
+        activity.description,
+        style: const TextStyle(
+          fontSize: 15,
+          color: Colors.black,
+        ),
+      ),
+    );
+  }
+
+  ListTile audioPlaybackWidget() {
+    return ListTile(
+      leading: const Icon(
+        Icons.audiotrack_outlined,
+        color: Colors.black,
+        size: 35,
+      ),
+      title: const Text(
+        "Recording",
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      ),
+      subtitle: Column(
+        children: [
+          Slider(
+            activeColor: Colors.green.shade300,
+            inactiveColor: Colors.green.shade100,
+            min: 0,
+            max: duration.inSeconds.toDouble(),
+            value: position.inSeconds.toDouble(),
+            onChanged: (value) async {
+              final position = Duration(seconds: value.toInt());
+              await audioPlayer.seek(position);
+
+              await audioPlayer.resume();
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(formatTime(position)),
+                Text(formatTime(duration - position)),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
+            child: CircleAvatar(
+              radius: 28,
+              backgroundColor: Colors.green.shade300,
+              foregroundColor: Colors.white,
+              child: IconButton(
+                icon: Icon(
+                  isPlaying ? Icons.pause : Icons.play_arrow,
+                ),
+                onPressed: () async {
+                  if (isPlaying) {
+                    await audioPlayer.pause();
+                  } else {
+                    await audioPlayer.resume();
+                  }
+                },
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  ListTile viewMoodWidget() {
+    return ListTile(
+      minLeadingWidth: 30,
+      leading: const Icon(
+        Icons.text_snippet_outlined,
+        color: Colors.black,
+        size: 35,
+      ),
+      title: Transform.translate(
+        offset: const Offset(0, -18),
+        child: const Text(
+          "Mood Level",
           style: TextStyle(
+            fontSize: 16,
             fontWeight: FontWeight.bold,
-            fontSize: 15,
+            color: Colors.black,
           ),
         ),
-        const SizedBox(height: 25),
-        RatingBarIndicator(
-          rating: activity.mood,
-          itemBuilder: (context, index) =>
-              Image.asset('assets/images/indicator.png'),
-          itemCount: 5,
-          itemSize: 50.0,
-          itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-          direction: Axis.horizontal,
+      ),
+      subtitle: Transform.translate(
+        offset: const Offset(0, -10),
+        child: Column(
+          children: [
+            RatingBarIndicator(
+              rating: activity.mood,
+              itemBuilder: (context, index) =>
+                  Image.asset('assets/images/indicator.png'),
+              itemCount: 5,
+              itemSize: 45.0,
+              itemPadding:
+                  const EdgeInsets.symmetric(vertical: 0, horizontal: 2.0),
+              direction: Axis.horizontal,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text(
+                    "Sad",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Text(
+                    "Happy",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text("Not great"),
-              Text("Excellent"),
-            ],
-          ),
-        ),
-      ],
+      ),
     );
   }
 

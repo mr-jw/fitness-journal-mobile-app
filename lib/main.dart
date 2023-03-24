@@ -27,16 +27,18 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) => MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          appBarTheme: AppBarTheme(
-            elevation: 0.1,
-            backgroundColor: Colors.green.shade300,
-            centerTitle: true,
-          ),
-          floatingActionButtonTheme: FloatingActionButtonThemeData(
-            elevation: 0.1,
-            backgroundColor: Colors.green.shade300,
-          ),
-        ),
+            appBarTheme: AppBarTheme(
+              elevation: 0.1,
+              backgroundColor: Colors.green.shade300,
+              centerTitle: true,
+            ),
+            floatingActionButtonTheme: FloatingActionButtonThemeData(
+              elevation: 0.1,
+              backgroundColor: Colors.green.shade300,
+            ),
+            progressIndicatorTheme: ProgressIndicatorThemeData(
+              color: Colors.green.shade300,
+            )),
         title: MyApp.title,
         home: const ActivityPage(),
       );

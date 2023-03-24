@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/model/activity.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:intl/intl.dart';
 
 class ActivityCardWidget extends StatelessWidget {
   const ActivityCardWidget({
@@ -17,34 +18,42 @@ class ActivityCardWidget extends StatelessWidget {
     return Card(
       color: Colors.white,
       shape: RoundedRectangleBorder(
-        side: const BorderSide(color: Colors.black, width: 0.8),
-        borderRadius: BorderRadius.circular(15),
+        side: const BorderSide(color: Colors.black, width: 0.5),
+        borderRadius: BorderRadius.circular(12),
       ),
-      child: Column(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ListTile(
-            leading: const Icon(
-              Icons.fitness_center_rounded,
-              color: Colors.black,
-              size: 40,
-            ),
-            title: Text(
-              activity.title,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
+          Expanded(
+            child: ListTile(
+              leading: const Icon(
+                Icons.fitness_center_rounded,
+                color: Colors.black,
+                size: 40,
               ),
-            ),
-            subtitle: RatingBarIndicator(
-              rating: activity.mood,
-              itemBuilder: (context, index) =>
-                  Image.asset('assets/images/indicator.png'),
-              itemCount: 5,
-              itemSize: 20.0,
-              itemPadding:
-                  const EdgeInsets.symmetric(horizontal: 2.0, vertical: 2.0),
-              direction: Axis.horizontal,
+              title: Text(
+                activity.title,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: RatingBarIndicator(
+                rating: activity.mood,
+                itemBuilder: (context, index) =>
+                    Image.asset('assets/images/indicator.png'),
+                itemCount: 5,
+                itemSize: 20.0,
+                itemPadding:
+                    const EdgeInsets.symmetric(horizontal: 2.0, vertical: 2.0),
+                direction: Axis.horizontal,
+              ),
+              trailing: Text(
+                DateFormat.jm().format(activity.date),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
         ],

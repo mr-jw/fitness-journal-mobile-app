@@ -37,7 +37,14 @@ class AudioTranscriber {
   }
 
   Future<List<int>> _getAudioContent(String name) async {
-    return File(name).readAsBytesSync().toList();
+    List<int> tmp = [];
+    try {
+      tmp = File(name).readAsBytesSync().toList();
+    } on PathNotFoundException {
+      print("File $name not found on system.");
+    }
+
+    return tmp;
   }
 
   String getTranscribedMessage() {

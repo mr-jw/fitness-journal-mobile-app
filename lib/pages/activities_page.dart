@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:fitness_tracker/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/widgets/activity_card_widget.dart';
@@ -7,7 +5,6 @@ import 'package:fitness_tracker/model/activity.dart';
 import 'package:fitness_tracker/db/activity_database.dart';
 import 'package:fitness_tracker/pages/edit_activity_page.dart';
 import 'package:fitness_tracker/pages/activity_detail_page.dart';
-import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'analytics_page.dart';
@@ -61,21 +58,46 @@ class _ActivityPageState extends State<ActivityPage> {
   late DateTime _selectedDay = _focusedDay;
 
 // debug code.
-  Future addActivity(int day) async {
+  Future addActivity(String title, int day, int month, double mood) async {
     final activity = Activity(
-      title: "Test Activity",
+      title: title,
       description: "Test Description.",
-      date: DateTime.utc(2023, 03, day),
+      date: DateTime.utc(2023, month, day),
       audio: "...",
-      mood: 1.5,
+      mood: mood,
     );
 
     await ActivityDatabase.instance.create(activity);
   }
 
+  void loadTestData() {
+    // March
+    addActivity("Sprint", 13, 03, 2);
+    addActivity("Dumbell-press", 13, 03, 3.5);
+    addActivity("Press-ups", 16, 03, 1.5);
+    addActivity("Deadlifts", 22, 03, 2);
+    addActivity("Squats", 22, 03, 2);
+    addActivity("Press-ups", 23, 03, 3.5);
+    addActivity("Sprint", 25, 03, 4);
+    addActivity("Deadlifts", 28, 03, 2);
+    addActivity("Bench-press", 31, 03, 1.5);
+
+    // April
+    addActivity("Sprint", 02, 04, 4);
+    addActivity("Squats", 04, 04, 2);
+    addActivity("Press-ups", 04, 04, 3.5);
+    addActivity("Sprint", 10, 04, 4);
+    addActivity("Squats", 16, 04, 2);
+    addActivity("Press-ups", 17, 04, 3.5);
+  }
+
   @override
   void initState() {
     super.initState();
+
+    _activities = [];
+
+    //loadTestData();
 
     _getEventsForDay();
   }
@@ -130,7 +152,7 @@ class _ActivityPageState extends State<ActivityPage> {
     return TableCalendar(
       focusedDay: _focusedDay,
       firstDay: DateTime.utc(2023),
-      lastDay: DateTime.utc(2035),
+      lastDay: DateTime.utc(2025),
       selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
       calendarFormat: _calendarFormat,
       rangeSelectionMode: _rangeSelectionMode,
@@ -181,34 +203,37 @@ class _ActivityPageState extends State<ActivityPage> {
                     )
                   : buildActivities(),
         ),
+        const SizedBox(height: 20),
       ],
     );
   }
 
-  ListView buildActivities() => ListView.separated(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-        itemCount: _activities.length,
-        itemBuilder: (context, index) {
-          final activity = _activities[index];
+  Widget buildActivities() {
+    return ListView.separated(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      itemCount: _activities.length,
+      itemBuilder: (context, index) {
+        final activity = _activities[index];
 
-          return GestureDetector(
-            onTap: () async {
-              await Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    ActivityDetailPage(activityId: activity.id!),
-              ));
+        return GestureDetector(
+          onTap: () async {
+            await Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) =>
+                  ActivityDetailPage(activityId: activity.id!),
+            ));
 
-              _getEventsForDay();
-            },
-            child: ActivityCardWidget(activity: activity, index: index),
-          );
-        },
-        separatorBuilder: (context, index) => const SizedBox(
-          height: 1,
-        ),
-      );
+            _getEventsForDay();
+          },
+          child: ActivityCardWidget(activity: activity, index: index),
+        );
+      },
+      separatorBuilder: (context, index) => const SizedBox(
+        height: 1,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -218,17 +243,22 @@ class _ActivityPageState extends State<ActivityPage> {
         body: _selectedIndex != 0
             ? _pages.elementAt(_selectedIndex)
             : activitiesPageContent(),
-        floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add),
-          onPressed: () async {
-            await Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (context) => const AddEditActivityPage()),
-            );
+        floatingActionButton: _selectedIndex != 0
+            ? null
+            : FloatingActionButton(
+                child: const Icon(
+                  Icons.add,
+                  size: 25,
+                ),
+                onPressed: () async {
+                  await Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const AddEditActivityPage()),
+                  );
 
-            _getEventsForDay();
-          },
-        ),
+                  _getEventsForDay();
+                },
+              ),
         bottomNavigationBar: BottomNavigationBar(
           iconSize: 25,
           backgroundColor: Colors.green.shade300,
