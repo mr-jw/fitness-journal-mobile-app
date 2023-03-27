@@ -26,8 +26,9 @@ class AudioTranscriber {
         sampleRateHertz: 44100,
         languageCode: 'en-US');
 
-    final audio = await _getAudioContent(audioSource);
     try {
+      final audio = await _getAudioContent(audioSource);
+
       await speechToText.recognize(config, audio).then((value) {
         _transcribedMessage =
             value.results.map((e) => e.alternatives.first.transcript).join('');
@@ -35,7 +36,7 @@ class AudioTranscriber {
         _isTranscribing = false;
       });
     } on PathNotFoundException {
-      print("File $audio not found on system.");
+      print("File not found on system.");
     }
   }
 

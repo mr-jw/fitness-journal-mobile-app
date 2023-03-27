@@ -108,10 +108,10 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
   ListTile title() {
     return ListTile(
       title: Text(
-        "${activity.title}",
+        "Activity: ${activity.title}",
         textAlign: TextAlign.center,
         style: const TextStyle(
-          fontSize: 28,
+          fontSize: 25,
           fontWeight: FontWeight.bold,
           color: Colors.black,
         ),
@@ -127,9 +127,9 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
         size: 35,
       ),
       title: const Text(
-        "Created on",
+        "Date created",
         style: TextStyle(
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.bold,
           color: Colors.black,
         ),
@@ -137,7 +137,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
       subtitle: Text(
         "${DateFormat.MMMMEEEEd().format(activity.date)} \n${DateFormat.jm().format(activity.date)}",
         style: const TextStyle(
-          fontSize: 15,
+          fontSize: 12,
           color: Colors.black,
         ),
       ),
@@ -154,7 +154,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
       title: const Text(
         "Description",
         style: TextStyle(
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.bold,
           color: Colors.black,
         ),
@@ -162,7 +162,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
       subtitle: Text(
         activity.description,
         style: const TextStyle(
-          fontSize: 15,
+          fontSize: 12,
           color: Colors.black,
         ),
       ),
@@ -179,7 +179,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
       title: const Text(
         "Recording",
         style: TextStyle(
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.bold,
           color: Colors.black,
         ),
@@ -247,7 +247,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
         child: const Text(
           "Mood Level",
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),

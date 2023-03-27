@@ -50,7 +50,7 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
 
   @override
   Widget build(BuildContext context) => ListView(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: 5),
         children: [
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -84,13 +84,19 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
 
   ListTile buildTitle() {
     return ListTile(
+      minLeadingWidth: 10,
+      leading: const Icon(
+        Icons.fitness_center,
+        color: Colors.black,
+        size: 35,
+      ),
       title: TextFormField(
         maxLines: 1,
         initialValue: widget.title,
         textCapitalization: TextCapitalization.sentences,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 15,
+          fontSize: 14,
         ),
         decoration: const InputDecoration(
           border: UnderlineInputBorder(),
@@ -108,10 +114,16 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
     var icon = isRecording ? Icons.stop : Icons.mic;
 
     return ListTile(
+      minLeadingWidth: 10,
+      leading: const Icon(
+        Icons.audiotrack_outlined,
+        color: Colors.black,
+        size: 35,
+      ),
       title: const Text(
         "Record your log",
         style: TextStyle(
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.bold,
           color: Colors.black,
         ),
@@ -163,6 +175,12 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
     buildAudioTranscription();
 
     return ListTile(
+      minLeadingWidth: 10,
+      leading: const Icon(
+        Icons.text_snippet_outlined,
+        color: Colors.black,
+        size: 35,
+      ),
       title: TextFormField(
         controller: GlobalVar.descriptionController,
         maxLines: 10,
@@ -173,7 +191,7 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
         ),
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
-          hintText: 'Speak to generate one...',
+          hintText: 'Enter a description, or speak to generate one...',
         ),
         validator: (description) => description != null && description.isEmpty
             ? 'The description cannot be empty'
@@ -184,12 +202,18 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
 
   ListTile buildMood() {
     return ListTile(
+      minLeadingWidth: 10,
+      leading: const Icon(
+        Icons.text_snippet_outlined,
+        color: Colors.black,
+        size: 35,
+      ),
       title: Transform.translate(
         offset: const Offset(0, -15),
         child: const Text(
           "How did you feel?",
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),

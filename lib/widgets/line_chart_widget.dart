@@ -14,20 +14,10 @@ class MoodPoint {
 
 class LineChartWidget extends StatelessWidget {
   final List<MoodPoint> points;
+  final int highestY;
 
-  const LineChartWidget(this.points, {Key? key}) : super(key: key);
-
-  double getHighestPointValue() {
-    double val = 0.0;
-
-    for (int i = 0; i < points.length; i++) {
-      if (points[i].y > val) {
-        val = points[i].y;
-      }
-    }
-
-    return val + 4;
-  }
+  const LineChartWidget(this.points, this.highestY, {Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +26,7 @@ class LineChartWidget extends StatelessWidget {
       child: LineChart(
         LineChartData(
           minY: 0,
-          maxY: getHighestPointValue(),
+          maxY: highestY.toDouble(),
           lineBarsData: [
             LineChartBarData(
                 spots: points.map((point) => FlSpot(point.x, point.y)).toList(),
