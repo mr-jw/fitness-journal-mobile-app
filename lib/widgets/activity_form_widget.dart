@@ -50,7 +50,7 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
 
   @override
   Widget build(BuildContext context) => ListView(
-        padding: EdgeInsets.symmetric(horizontal: 0),
+        padding: EdgeInsets.symmetric(horizontal: 20),
         children: [
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -84,11 +84,6 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
 
   ListTile buildTitle() {
     return ListTile(
-      leading: const Icon(
-        Icons.fitness_center,
-        color: Colors.black,
-        size: 35,
-      ),
       title: TextFormField(
         maxLines: 1,
         initialValue: widget.title,
@@ -113,11 +108,6 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
     var icon = isRecording ? Icons.stop : Icons.mic;
 
     return ListTile(
-      leading: const Icon(
-        Icons.audiotrack_outlined,
-        color: Colors.black,
-        size: 35,
-      ),
       title: const Text(
         "Record your log",
         style: TextStyle(
@@ -173,11 +163,6 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
     buildAudioTranscription();
 
     return ListTile(
-      leading: const Icon(
-        Icons.text_snippet_outlined,
-        color: Colors.black,
-        size: 35,
-      ),
       title: TextFormField(
         controller: GlobalVar.descriptionController,
         maxLines: 10,
@@ -199,11 +184,6 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
 
   ListTile buildMood() {
     return ListTile(
-      leading: const Icon(
-        Icons.text_snippet_outlined,
-        color: Colors.black,
-        size: 35,
-      ),
       title: Transform.translate(
         offset: const Offset(0, -15),
         child: const Text(

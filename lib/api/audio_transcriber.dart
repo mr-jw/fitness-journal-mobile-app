@@ -27,13 +27,16 @@ class AudioTranscriber {
         languageCode: 'en-US');
 
     final audio = await _getAudioContent(audioSource);
-
-    await speechToText.recognize(config, audio).then((value) {
-      _transcribedMessage =
-          value.results.map((e) => e.alternatives.first.transcript).join('');
-    }).whenComplete(() {
-      _isTranscribing = false;
-    });
+    try {
+      await speechToText.recognize(config, audio).then((value) {
+        _transcribedMessage =
+            value.results.map((e) => e.alternatives.first.transcript).join('');
+      }).whenComplete(() {
+        _isTranscribing = false;
+      });
+    } on PathNotFoundException {
+      print("File $audio not found on system.");
+    }
   }
 
   Future<List<int>> _getAudioContent(String name) async {

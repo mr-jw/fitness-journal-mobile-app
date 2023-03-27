@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:fitness_tracker/model/activity.dart';
@@ -74,21 +77,6 @@ CREATE TABLE $tableActivities (
     return result.map((json) => Activity.fromJSON(json)).toList();
   }
 
-  Future<List<Activity>> readActivitiesFromDate(DateTime date) async {
-    final db = await instance.database;
-
-    String dateQuery = date.toIso8601String();
-
-    final result = await db.query(
-      tableActivities,
-      columns: ActivityFields.values,
-      where: '${ActivityFields.date} = ?',
-      whereArgs: [dateQuery],
-    );
-
-    return result.map((json) => Activity.fromJSON(json)).toList();
-  }
-
   Future<int> update(Activity activity) async {
     final db = await instance.database;
 
@@ -113,5 +101,74 @@ CREATE TABLE $tableActivities (
   Future close() async {
     final db = await instance.database;
     db.close();
+  }
+
+  DateTime mostRecentMonday(DateTime date) =>
+      DateTime(date.year, date.month, date.day - (date.weekday - 1));
+
+  bool isWithinThisWeek(DateTime date) {
+    DateTime now = DateTime.now();
+    // get the start of the week date.
+    DateTime startOfWeek = mostRecentMonday(now);
+
+    if ((date.day >= startOfWeek.day) && (date.day <= startOfWeek.day + 7)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<List<Activity>> readActivitiesFromDate(DateTime date) async {
+    final db = await instance.database;
+
+    final result = await db.query(tableActivities);
+
+    List<Activity> activities =
+        result.map((json) => Activity.fromJSON(json)).toList();
+
+    int i = 0;
+    while (i < activities.length) {
+      if (activities[i].date.day == date.day) {
+        i++;
+      } else {
+        activities.removeAt(i);
+
+        if (i == activities.length) {
+          break;
+        } else {
+          i = 0;
+          continue;
+        }
+      }
+    }
+
+    return activities;
+  }
+
+  Future<List<Activity>> readActivitiesFromThisWeek() async {
+    final db = await instance.database;
+
+    final result = await db.query(tableActivities);
+
+    List<Activity> activities =
+        result.map((json) => Activity.fromJSON(json)).toList();
+
+    int i = 0;
+    while (i < activities.length) {
+      if (isWithinThisWeek(activities[i].date)) {
+        i++;
+      } else {
+        activities.removeAt(i);
+
+        if (i == activities.length) {
+          break;
+        } else {
+          i = 0;
+          continue;
+        }
+      }
+    }
+
+    return activities;
   }
 }

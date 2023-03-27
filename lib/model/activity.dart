@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 const String tableActivities = 'activities';
 
 class ActivityFields {

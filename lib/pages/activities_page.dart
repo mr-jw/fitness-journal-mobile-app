@@ -71,24 +71,13 @@ class _ActivityPageState extends State<ActivityPage> {
   }
 
   void loadTestData() {
-    // March
-    addActivity("Sprint", 13, 03, 2);
-    addActivity("Dumbell-press", 13, 03, 3.5);
-    addActivity("Press-ups", 16, 03, 1.5);
-    addActivity("Deadlifts", 22, 03, 2);
-    addActivity("Squats", 22, 03, 2);
-    addActivity("Press-ups", 23, 03, 3.5);
-    addActivity("Sprint", 25, 03, 4);
-    addActivity("Deadlifts", 28, 03, 2);
-    addActivity("Bench-press", 31, 03, 1.5);
-
     // April
-    addActivity("Sprint", 02, 04, 4);
-    addActivity("Squats", 04, 04, 2);
-    addActivity("Press-ups", 04, 04, 3.5);
-    addActivity("Sprint", 10, 04, 4);
-    addActivity("Squats", 16, 04, 2);
-    addActivity("Press-ups", 17, 04, 3.5);
+    addActivity("Sprint", 27, 03, 4);
+    addActivity("Squats", 29, 03, 2);
+    addActivity("Press-ups", 29, 03, 3.5);
+    addActivity("Sprint", 30, 03, 4);
+    addActivity("Squats", 31, 03, 2);
+    addActivity("Press-ups", 28, 03, 3.5);
   }
 
   @override
