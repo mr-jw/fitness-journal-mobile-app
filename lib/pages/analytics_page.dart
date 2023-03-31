@@ -88,6 +88,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         }
       }
 
+      // check for division by 0.
       if ((total == 0) || (counter == 0)) {
         result.add(0.0);
       } else {
@@ -97,10 +98,10 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     return result;
   }
 
-  List<MoodPoint> _getGraphPoints(List<double> data) {
+  // convert gathered data to Graph (x/y) mood points.
+  List<Point> _getGraphPoints(List<double> data) {
     return data
-        .mapIndexed(
-            (index, element) => MoodPoint(x: index.toDouble(), y: element))
+        .mapIndexed((index, element) => Point(x: index.toDouble(), y: element))
         .toList();
   }
 
@@ -126,6 +127,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
       decoration: BoxDecoration(
         color: Colors.green.shade50,
         border: Border.all(color: Colors.black),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         children: [
@@ -146,7 +148,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                 backgroundColor: Colors.green.shade300,
                 radius: 10,
               ),
-              const Text("\t\t\tNo. created activities"),
+              const Text("\t\t\tNumber of created activities"),
             ],
           ),
           const SizedBox(height: 25),
@@ -164,11 +166,12 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
       decoration: BoxDecoration(
         color: Colors.green.shade50,
         border: Border.all(color: Colors.black),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         children: [
           const Text(
-            "Your Average Mood (current week)",
+            "Average Daily Mood (current week)",
             textAlign: TextAlign.left,
             style: TextStyle(
               fontSize: 16,
@@ -211,7 +214,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                     ),
               ),
               Text(
-                '${_graphOneData.length}',
+                '${_activities.length}',
                 textAlign: TextAlign.center,
               ),
             ],

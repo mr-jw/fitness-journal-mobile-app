@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fitness_tracker/model/activity.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../themes/theme_provider.dart';
 
 class ActivityCardWidget extends StatelessWidget {
   const ActivityCardWidget({
@@ -15,10 +18,10 @@ class ActivityCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Card(
-      color: Colors.white,
       shape: RoundedRectangleBorder(
-        side: const BorderSide(color: Colors.black, width: 0.5),
+        side: const BorderSide(width: 0.5),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -27,21 +30,21 @@ class ActivityCardWidget extends StatelessWidget {
           Expanded(
             child: ListTile(
               leading: const Icon(
-                Icons.fitness_center_rounded,
-                color: Colors.black,
+                Icons.fitness_center,
                 size: 40,
               ),
               title: Text(
                 activity.title,
                 style: const TextStyle(
                   fontSize: 15,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.normal,
                 ),
               ),
               subtitle: RatingBarIndicator(
                 rating: activity.mood,
-                itemBuilder: (context, index) =>
-                    Image.asset('assets/images/indicator.png'),
+                itemBuilder: (context, index) => themeProvider.isDarkTheme
+                    ? Image.asset('assets/images/indicator-dark.png')
+                    : Image.asset('assets/images/indicator-light.png'),
                 itemCount: 5,
                 itemSize: 20.0,
                 itemPadding:
@@ -51,7 +54,7 @@ class ActivityCardWidget extends StatelessWidget {
               trailing: Text(
                 DateFormat.jm().format(activity.date),
                 style: const TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.normal,
                 ),
               ),
             ),

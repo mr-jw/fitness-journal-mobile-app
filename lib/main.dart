@@ -1,6 +1,9 @@
+import 'package:fitness_tracker/themes/theme_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/pages/activities_page.dart';
 import 'package:fitness_tracker/api/text_editor_controller.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,22 +27,17 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            appBarTheme: AppBarTheme(
-              elevation: 0.1,
-              backgroundColor: Colors.green.shade300,
-              centerTitle: true,
-            ),
-            floatingActionButtonTheme: FloatingActionButtonThemeData(
-              elevation: 0.1,
-              backgroundColor: Colors.green.shade300,
-            ),
-            progressIndicatorTheme: ProgressIndicatorThemeData(
-              color: Colors.green.shade300,
-            )),
-        title: MyApp.title,
-        home: const ActivityPage(),
-      );
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      builder: (context, _) {
+        final themeProvider = Provider.of<ThemeProvider>(context);
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          themeMode: themeProvider.themeMode,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          title: MyApp.title,
+          home: const ActivityPage(),
+        );
+      });
 }

@@ -4,16 +4,16 @@ import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class MoodPoint {
+class Point {
   final double x;
   final double y;
 
   // define a point in the table.
-  MoodPoint({required this.x, required this.y});
+  Point({required this.x, required this.y});
 }
 
 class LineChartWidget extends StatelessWidget {
-  final List<MoodPoint> points;
+  final List<Point> points;
   final int highestY;
 
   const LineChartWidget(this.points, this.highestY, {Key? key})
@@ -22,7 +22,7 @@ class LineChartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 2,
+      aspectRatio: 1.6,
       child: LineChart(
         LineChartData(
           minY: 0,

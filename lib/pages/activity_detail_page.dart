@@ -7,6 +7,9 @@ import 'package:intl/intl.dart';
 import 'package:fitness_tracker/pages/edit_activity_page.dart';
 import 'package:fitness_tracker/db/activity_database.dart';
 import 'package:fitness_tracker/model/activity.dart';
+import 'package:provider/provider.dart';
+
+import '../themes/theme_provider.dart';
 
 class ActivityDetailPage extends StatefulWidget {
   final int activityId;
@@ -113,7 +116,6 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
         style: const TextStyle(
           fontSize: 25,
           fontWeight: FontWeight.bold,
-          color: Colors.black,
         ),
       ),
     );
@@ -123,22 +125,19 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
     return ListTile(
       leading: const Icon(
         Icons.alarm,
-        color: Colors.black,
         size: 35,
       ),
       title: const Text(
         "Date created",
         style: TextStyle(
           fontSize: 14,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
+          fontWeight: FontWeight.w500,
         ),
       ),
       subtitle: Text(
         "${DateFormat.MMMMEEEEd().format(activity.date)} \n${DateFormat.jm().format(activity.date)}",
         style: const TextStyle(
           fontSize: 12,
-          color: Colors.black,
         ),
       ),
     );
@@ -148,47 +147,47 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
     return ListTile(
       leading: const Icon(
         Icons.text_snippet_outlined,
-        color: Colors.black,
         size: 35,
       ),
       title: const Text(
         "Description",
         style: TextStyle(
           fontSize: 14,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
+          fontWeight: FontWeight.w500,
         ),
       ),
       subtitle: Text(
         activity.description,
         style: const TextStyle(
           fontSize: 12,
-          color: Colors.black,
         ),
       ),
     );
   }
 
   ListTile audioPlaybackWidget() {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return ListTile(
       leading: const Icon(
         Icons.audiotrack_outlined,
-        color: Colors.black,
         size: 35,
       ),
       title: const Text(
         "Recording",
         style: TextStyle(
           fontSize: 14,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
+          fontWeight: FontWeight.w500,
         ),
       ),
       subtitle: Column(
         children: [
           Slider(
-            activeColor: Colors.green.shade300,
-            inactiveColor: Colors.green.shade100,
+            activeColor: themeProvider.isDarkTheme
+                ? Colors.amber.shade300
+                : Colors.green.shade300,
+            inactiveColor: themeProvider.isDarkTheme
+                ? Colors.amber.shade100
+                : Colors.green.shade100,
             min: 0,
             max: duration.inSeconds.toDouble(),
             value: position.inSeconds.toDouble(),
@@ -213,7 +212,9 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
             padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: CircleAvatar(
               radius: 28,
-              backgroundColor: Colors.green.shade300,
+              backgroundColor: themeProvider.isDarkTheme
+                  ? Colors.amber.shade300
+                  : Colors.green.shade300,
               foregroundColor: Colors.white,
               child: IconButton(
                 icon: Icon(
@@ -235,11 +236,11 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
   }
 
   ListTile viewMoodWidget() {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return ListTile(
       minLeadingWidth: 30,
       leading: const Icon(
         Icons.text_snippet_outlined,
-        color: Colors.black,
         size: 35,
       ),
       title: Transform.translate(
@@ -248,8 +249,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
           "Mood Level",
           style: TextStyle(
             fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
@@ -259,8 +259,9 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
           children: [
             RatingBarIndicator(
               rating: activity.mood,
-              itemBuilder: (context, index) =>
-                  Image.asset('assets/images/indicator.png'),
+              itemBuilder: (context, index) => themeProvider.isDarkTheme
+                  ? Image.asset('assets/images/indicator-dark.png')
+                  : Image.asset('assets/images/indicator-light.png'),
               itemCount: 5,
               itemSize: 45.0,
               itemPadding:
@@ -276,14 +277,12 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
                     "Sad",
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.black,
                     ),
                   ),
                   Text(
                     "Happy",
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.black,
                     ),
                   ),
                 ],

@@ -3,6 +3,9 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fitness_tracker/api/sound_recorder.dart';
 import 'package:fitness_tracker/api/audio_transcriber.dart';
 import 'package:fitness_tracker/api/text_editor_controller.dart';
+import 'package:provider/provider.dart';
+
+import '../themes/theme_provider.dart';
 
 class ActivityFormWidget extends StatefulWidget {
   final Function(String) fullAudioFilePathCallBack;
@@ -87,7 +90,6 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
       minLeadingWidth: 10,
       leading: const Icon(
         Icons.fitness_center,
-        color: Colors.black,
         size: 35,
       ),
       title: TextFormField(
@@ -99,7 +101,6 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
           fontSize: 14,
         ),
         decoration: const InputDecoration(
-          border: UnderlineInputBorder(),
           hintText: 'Enter activity name...',
         ),
         validator: (title) =>
@@ -113,11 +114,12 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
     var isRecording = soundRecorder.isRecording;
     var icon = isRecording ? Icons.stop : Icons.mic;
 
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return ListTile(
       minLeadingWidth: 10,
       leading: const Icon(
         Icons.audiotrack_outlined,
-        color: Colors.black,
         size: 35,
       ),
       title: const Text(
@@ -125,7 +127,6 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
-          color: Colors.black,
         ),
       ),
       subtitle: Transform.translate(
@@ -142,7 +143,9 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
               widget.fullAudioFilePathCallBack(soundRecorder.getCompletePath());
             },
             elevation: 2,
-            fillColor: Colors.white,
+            fillColor: themeProvider.isDarkTheme
+                ? Colors.amber.shade300
+                : Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 0),
             shape: const CircleBorder(),
             child: Icon(
@@ -178,7 +181,6 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
       minLeadingWidth: 10,
       leading: const Icon(
         Icons.text_snippet_outlined,
-        color: Colors.black,
         size: 35,
       ),
       title: TextFormField(
@@ -201,11 +203,11 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
   }
 
   ListTile buildMood() {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return ListTile(
       minLeadingWidth: 10,
       leading: const Icon(
         Icons.text_snippet_outlined,
-        color: Colors.black,
         size: 35,
       ),
       title: Transform.translate(
@@ -215,7 +217,6 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
           ),
         ),
       ),
@@ -230,8 +231,12 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
               itemCount: 5,
               itemSize: 45.0,
               ratingWidget: RatingWidget(
-                full: Image.asset('assets/images/indicator.png'),
-                half: Image.asset('assets/images/indicator-half.png'),
+                full: themeProvider.isDarkTheme
+                    ? Image.asset('assets/images/indicator-dark.png')
+                    : Image.asset('assets/images/indicator-light.png'),
+                half: themeProvider.isDarkTheme
+                    ? Image.asset('assets/images/indicator-half-dark.png')
+                    : Image.asset('assets/images/indicator-half-light.png'),
                 empty: Image.asset('assets/images/indicator-empty.png'),
               ),
               itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),

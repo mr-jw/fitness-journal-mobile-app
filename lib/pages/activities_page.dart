@@ -5,8 +5,10 @@ import 'package:fitness_tracker/model/activity.dart';
 import 'package:fitness_tracker/db/activity_database.dart';
 import 'package:fitness_tracker/pages/edit_activity_page.dart';
 import 'package:fitness_tracker/pages/activity_detail_page.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../themes/theme_provider.dart';
 import 'analytics_page.dart';
 
 int getHashCode(DateTime key) {
@@ -31,18 +33,18 @@ class _ActivityPageState extends State<ActivityPage> {
 
   // page naivgation variables.
   static const List<Widget> _pages = <Widget>[
-    ActivityPage(),
     AnalyticsPage(),
+    ActivityPage(),
     SettingsPage(),
   ];
 
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
   void onItemTapped(int index) {
     setState(() {
       if (index == 0) {
-        _appBarTitle = "Activities";
-      } else if (index == 1) {
         _appBarTitle = "Analytics";
+      } else if (index == 1) {
+        _appBarTitle = "Activities";
       } else {
         _appBarTitle = "Settings";
       }
@@ -55,7 +57,7 @@ class _ActivityPageState extends State<ActivityPage> {
   final CalendarFormat _calendarFormat = CalendarFormat.week;
   final RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.disabled;
   DateTime _focusedDay = DateTime.now();
-  late DateTime _selectedDay = _focusedDay;
+  late DateTime _selectedDay = DateTime.now();
 
 // debug code.
   Future addActivity(String title, int day, int month, double mood) async {
@@ -138,6 +140,7 @@ class _ActivityPageState extends State<ActivityPage> {
   }
 
   Widget buildCalendar() {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return TableCalendar(
       focusedDay: _focusedDay,
       firstDay: DateTime.utc(2023),
@@ -157,16 +160,20 @@ class _ActivityPageState extends State<ActivityPage> {
         ),
         // Use `CalendarStyle` to customize the UI
         todayDecoration: BoxDecoration(
-          color: Colors.green.shade200,
+          color: themeProvider.isDarkTheme
+              ? Colors.amber.shade200
+              : Colors.green.shade200,
           shape: BoxShape.circle,
         ),
         // Use `CalendarStyle` to customize the UI
         selectedDecoration: BoxDecoration(
-          color: Colors.green.shade400,
+          color: themeProvider.isDarkTheme
+              ? Colors.amber.shade400
+              : Colors.green.shade400,
           shape: BoxShape.circle,
         ),
         selectedTextStyle: const TextStyle(
-          color: Colors.white,
+          color: Colors.black,
         ),
       ),
       onDaySelected: _onDaySelected,
@@ -187,7 +194,7 @@ class _ActivityPageState extends State<ActivityPage> {
                   ? const Center(
                       child: Text(
                         'No Activities.',
-                        style: TextStyle(color: Colors.black, fontSize: 24),
+                        style: TextStyle(fontSize: 24),
                       ),
                     )
                   : buildActivities(),
@@ -229,36 +236,36 @@ class _ActivityPageState extends State<ActivityPage> {
         appBar: AppBar(
           title: Text(_appBarTitle),
         ),
-        body: _selectedIndex != 0
+        body: _selectedIndex != 1
             ? _pages.elementAt(_selectedIndex)
             : activitiesPageContent(),
-        floatingActionButton: _selectedIndex != 0
-            ? null
-            : FloatingActionButton(
-                child: const Icon(
-                  Icons.add,
-                  size: 25,
-                ),
-                onPressed: () async {
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => const AddEditActivityPage()),
-                  );
+        floatingActionButton:
+            (_selectedIndex != 1) || (_selectedDay.day != DateTime.now().day)
+                ? null
+                : FloatingActionButton(
+                    child: const Icon(
+                      Icons.add,
+                      size: 25,
+                    ),
+                    onPressed: () async {
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const AddEditActivityPage()),
+                      );
 
-                  _getEventsForDay();
-                },
-              ),
+                      _getEventsForDay();
+                    },
+                  ),
         bottomNavigationBar: BottomNavigationBar(
           iconSize: 25,
-          backgroundColor: Colors.green.shade300,
           items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.fitness_center),
-              label: 'Activities',
-            ),
             BottomNavigationBarItem(
               icon: Icon(Icons.bar_chart),
               label: 'Analytics',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.fitness_center),
+              label: 'Activities',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings),
@@ -266,7 +273,6 @@ class _ActivityPageState extends State<ActivityPage> {
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.white,
           onTap: onItemTapped,
         ),
       );
