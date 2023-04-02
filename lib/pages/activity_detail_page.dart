@@ -111,7 +111,7 @@ class _ActivityDetailPageState extends State<ActivityDetailPage> {
   ListTile title() {
     return ListTile(
       title: Text(
-        "Activity: ${activity.title}",
+        activity.title,
         textAlign: TextAlign.center,
         style: const TextStyle(
           fontSize: 25,

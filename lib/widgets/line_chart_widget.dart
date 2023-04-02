@@ -3,6 +3,9 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../themes/theme_provider.dart';
 
 class Point {
   final double x;
@@ -12,33 +15,65 @@ class Point {
   Point({required this.x, required this.y});
 }
 
-class LineChartWidget extends StatelessWidget {
+class LineChartWidget extends StatefulWidget {
   final List<Point> points;
-  final int highestY;
 
-  const LineChartWidget(this.points, this.highestY, {Key? key})
-      : super(key: key);
+  const LineChartWidget(this.points, {Key? key}) : super(key: key);
+
+  @override
+  State<LineChartWidget> createState() => _LineChartWidgetState();
+}
+
+class _LineChartWidgetState extends State<LineChartWidget> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  double highestTally() {
+    double result = 0.0;
+    for (int i = 0; i < widget.points.length; i++) {
+      if (result < widget.points[i].y) {
+        result = widget.points[i].y;
+      }
+    }
+
+    return result;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return AspectRatio(
-      aspectRatio: 1.6,
+      aspectRatio: 3,
       child: LineChart(
         LineChartData(
           minY: 0,
-          maxY: highestY.toDouble(),
+          maxY: highestTally(),
           lineBarsData: [
             LineChartBarData(
-                spots: points.map((point) => FlSpot(point.x, point.y)).toList(),
-                isCurved: false,
+                spots: widget.points
+                    .map((point) => FlSpot(point.x, point.y))
+                    .toList(),
+                isCurved: true,
                 dotData: FlDotData(
                   show: true,
                 ),
-                color: Colors.green.shade300),
+                color: themeProvider.isDarkTheme
+                    ? Colors.amber.shade300
+                    : Colors.green.shade300),
           ],
           borderData: FlBorderData(
-              border: const Border(bottom: BorderSide(), left: BorderSide())),
-          gridData: FlGridData(show: true),
+            border: Border(
+              bottom: BorderSide(
+                color: themeProvider.isDarkTheme ? Colors.white : Colors.black,
+              ),
+              left: BorderSide(
+                color: themeProvider.isDarkTheme ? Colors.white : Colors.black,
+              ),
+            ),
+          ),
+          gridData: FlGridData(show: false),
           titlesData: FlTitlesData(
             bottomTitles: AxisTitles(sideTitles: _bottomTitles),
             leftTitles: AxisTitles(sideTitles: _leftTiles),

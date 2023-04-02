@@ -234,7 +234,10 @@ class _ActivityPageState extends State<ActivityPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text(_appBarTitle),
+          centerTitle: true,
+          title: Text(
+            _appBarTitle,
+          ),
         ),
         body: _selectedIndex != 1
             ? _pages.elementAt(_selectedIndex)

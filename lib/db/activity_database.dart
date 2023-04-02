@@ -110,8 +110,10 @@ CREATE TABLE $tableActivities (
     DateTime now = DateTime.now();
     // get the start of the week date.
     DateTime startOfWeek = mostRecentMonday(now);
+    int tmp = startOfWeek.day + 7;
 
-    if ((date.day >= startOfWeek.day) && (date.day <= startOfWeek.day + 7)) {
+    if (date.isAfter(startOfWeek) &&
+        date.isBefore(startOfWeek.add(const Duration(days: 7)))) {
       return true;
     } else {
       return false;

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../db/activity_database.dart';
 import '../model/activity.dart';
+import '../themes/theme_provider.dart';
 import '../widgets/line_chart_widget.dart';
 import 'package:collection/collection.dart';
 
@@ -17,6 +19,7 @@ class AnalyticsPage extends StatefulWidget {
 class _AnalyticsPageState extends State<AnalyticsPage> {
   bool _isLoading = false;
   DateTime today = DateTime.now();
+  late DateTime weekStart;
   String graphName = "Activity Creation Rate (current week)";
 
   List<DateTime> weekDates = [];
@@ -107,37 +110,67 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-        child: Column(
-          children: [
-            activityRate(),
-            const SizedBox(height: 20),
-            moodAverages(),
-          ],
-        ),
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: themeProvider.isDarkTheme
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'This Week (${DateFormat.MMMd().format(beginningOfWeek(today)).toString()} - ${DateFormat.MMMd().format(beginningOfWeek(today).add(const Duration(days: 7))).toString()})',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  activityRateGraphWidget(),
+                  const SizedBox(height: 20),
+                  moodAveragesGraphWidget(),
+                ],
+              ),
       ),
     );
   }
 
-  Container activityRate() {
+  Container activityRateGraphWidget() {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Container(
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Colors.green.shade50,
-        border: Border.all(color: Colors.black),
+        border: Border.all(
+          color: themeProvider.isDarkTheme ? Colors.white : Colors.black,
+        ),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         children: [
-          const Text(
-            "Created Activities (current week)",
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+          const Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              "Your Activities",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           const SizedBox(height: 15),
@@ -145,38 +178,41 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircleAvatar(
-                backgroundColor: Colors.green.shade300,
-                radius: 10,
+                backgroundColor: themeProvider.isDarkTheme
+                    ? Colors.amber.shade300
+                    : Colors.green.shade300,
+                radius: 8,
               ),
-              const Text("\t\t\tNumber of created activities"),
+              const Text("\t\t\tNumber of Activities"),
             ],
           ),
-          const SizedBox(height: 25),
-          LineChartWidget(_getGraphPoints(_graphOneData), 6),
-          const SizedBox(height: 10),
-          activityTable(),
+          const SizedBox(height: 20),
+          LineChartWidget(_getGraphPoints(_graphOneData)),
         ],
       ),
     );
   }
 
-  Container moodAverages() {
+  Container moodAveragesGraphWidget() {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Container(
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Colors.green.shade50,
-        border: Border.all(color: Colors.black),
+        border: Border.all(
+          color: themeProvider.isDarkTheme ? Colors.white : Colors.black,
+        ),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         children: [
-          const Text(
-            "Average Daily Mood (current week)",
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+          const Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              "Your Mood",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           const SizedBox(height: 15),
@@ -184,15 +220,16 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircleAvatar(
-                backgroundColor: Colors.green.shade300,
-                radius: 10,
+                backgroundColor: themeProvider.isDarkTheme
+                    ? Colors.amber.shade300
+                    : Colors.green.shade300,
+                radius: 8,
               ),
-              const Text("\t\t\tAverage mood for day"),
+              const Text("\t\t\tAverage Mood value"),
             ],
           ),
-          const SizedBox(height: 25),
-          LineChartWidget(_getGraphPoints(_graphTwoData), 8),
-          const SizedBox(height: 10),
+          const SizedBox(height: 20),
+          LineChartWidget(_getGraphPoints(_graphTwoData)),
         ],
       ),
     );

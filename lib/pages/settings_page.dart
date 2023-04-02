@@ -17,9 +17,15 @@ class _SettingsPageState extends State<SettingsPage> {
     return SettingsList(
       sections: [
         SettingsSection(
+          title: Text('Display'),
           tiles: [
             SettingsTile.switchTile(
-              title: const Text('Dark Mode'),
+              leading: const Icon(
+                Icons.dark_mode_outlined,
+              ),
+              title: const Text(
+                'Dark Mode',
+              ),
               activeSwitchColor: themeProvider.isDarkTheme
                   ? Colors.amber.shade400
                   : Colors.white,
@@ -29,14 +35,17 @@ class _SettingsPageState extends State<SettingsPage> {
                     Provider.of<ThemeProvider>(context, listen: false);
                 provider.toggleTheme(value);
               },
-              leading: const Icon(
-                Icons.dark_mode_outlined,
-              ),
             ),
+          ],
+        ),
+        SettingsSection(
+          title: Text('Privacy and Security'),
+          tiles: [
             SettingsTile(
               title: const Text('Clear App data'),
               onPressed: (context) {},
-              description: const Text("Erase all data stored on this device."),
+              description:
+                  const Text("Erase all Activity data stored on this device."),
               leading: const Icon(Icons.data_array_outlined),
             ),
           ],
