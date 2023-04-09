@@ -232,51 +232,62 @@ class _ActivityPageState extends State<ActivityPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(
-            _appBarTitle,
+  Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    return Scaffold(
+      appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Image(
+            image: themeProvider.isDarkTheme
+                ? const AssetImage('assets/images/myfit-logo-dark.png')
+                : const AssetImage('assets/images/myfit-logo.png'),
           ),
         ),
-        body: _selectedIndex != 1
-            ? _pages.elementAt(_selectedIndex)
-            : activitiesPageContent(),
-        floatingActionButton:
-            (_selectedIndex != 1) || (_selectedDay.day != DateTime.now().day)
-                ? null
-                : FloatingActionButton(
-                    child: const Icon(
-                      Icons.add,
-                      size: 25,
-                    ),
-                    onPressed: () async {
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => const AddEditActivityPage()),
-                      );
-
-                      _getEventsForDay();
-                    },
-                  ),
-        bottomNavigationBar: BottomNavigationBar(
-          iconSize: 25,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.bar_chart),
-              label: 'Analytics',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.fitness_center),
-              label: 'Activities',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Settings',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          onTap: onItemTapped,
+        centerTitle: true,
+        title: Text(
+          _appBarTitle,
         ),
-      );
+      ),
+      body: _selectedIndex != 1
+          ? _pages.elementAt(_selectedIndex)
+          : activitiesPageContent(),
+      floatingActionButton:
+          (_selectedIndex != 1) || (_selectedDay.day != DateTime.now().day)
+              ? null
+              : FloatingActionButton(
+                  child: const Icon(
+                    Icons.add,
+                    size: 25,
+                  ),
+                  onPressed: () async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => const AddEditActivityPage()),
+                    );
+
+                    _getEventsForDay();
+                  },
+                ),
+      bottomNavigationBar: BottomNavigationBar(
+        iconSize: 25,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart),
+            label: 'Analytics',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fitness_center),
+            label: 'Activities',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: onItemTapped,
+      ),
+    );
+  }
 }

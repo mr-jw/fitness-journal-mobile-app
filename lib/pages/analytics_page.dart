@@ -225,7 +225,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                     : Colors.green.shade300,
                 radius: 8,
               ),
-              const Text("\t\t\tAverage Mood value"),
+              const Text("\t\t\t(Mean) Mood Average"),
             ],
           ),
           const SizedBox(height: 20),
