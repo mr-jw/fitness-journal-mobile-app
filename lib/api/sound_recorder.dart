@@ -98,7 +98,6 @@ class SoundRecorder {
   }
 
   String _getFileName() {
-    // The fileName variable is not getting set correctly.
     return "$filename.wav";
   }
 

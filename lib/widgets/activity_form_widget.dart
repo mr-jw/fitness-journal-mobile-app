@@ -53,7 +53,7 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
 
   @override
   Widget build(BuildContext context) => ListView(
-        padding: EdgeInsets.symmetric(horizontal: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 5),
         children: [
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -165,16 +165,12 @@ class _ActivityFormWidgetState extends State<ActivityFormWidget> {
     if (soundRecorder.getCompletePath().isNotEmpty) {
       await audioTranscriber.transcribe(soundRecorder.getCompletePath());
 
-      // some sort of check to see if the audio transcriber has stopped.
-
       GlobalVar.descriptionController.text =
           audioTranscriber.getTranscribedMessage();
     }
   }
 
   ListTile buildDescription() {
-    // this is working to update the description form
-    // but the value needs to be passed back as onChangeDescription.
     buildAudioTranscription();
 
     return ListTile(

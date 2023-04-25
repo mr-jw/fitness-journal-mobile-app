@@ -1,5 +1,4 @@
 import 'package:fitness_tracker/themes/theme_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/pages/activities_page.dart';
 import 'package:fitness_tracker/api/text_editor_controller.dart';

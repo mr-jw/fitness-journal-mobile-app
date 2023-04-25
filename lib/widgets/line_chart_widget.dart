@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +42,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return AspectRatio(
-      aspectRatio: 3,
+      aspectRatio: 1,
       child: LineChart(
         LineChartData(
           minY: 0,

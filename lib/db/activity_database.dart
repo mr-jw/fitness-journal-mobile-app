@@ -1,30 +1,34 @@
-import 'dart:convert';
-
-import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:fitness_tracker/model/activity.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class ActivityDatabase {
-  static final ActivityDatabase instance = ActivityDatabase._init();
-
-  static Database? _database;
-
+  // init method.
   ActivityDatabase._init();
 
+  // global field variable; stores an instance of the database
+  // by calling the init method.
+  static final ActivityDatabase instance = ActivityDatabase._init();
+
+  // field for the database.
+  static Database? _database;
+
+  // open connection to database...
   Future<Database> get database async {
+    // if the database exists, return it.
     if (_database != null) return _database!;
 
+    // otherwise, initialise the database .
     _database = await _initDB('activities.db');
+
+    // return the database.
     return _database!;
   }
 
+  // pass in a file path to store the database.
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-    print(path);
-
     return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
@@ -33,6 +37,7 @@ class ActivityDatabase {
     const textType = 'TEXT NOT NULL';
     const doubleType = 'DOUBLE NOT NULL';
 
+    // create the database table, with all the necessary fields.
     db.execute('''
 CREATE TABLE $tableActivities (
   ${ActivityFields.id} $idType,
@@ -110,7 +115,6 @@ CREATE TABLE $tableActivities (
     DateTime now = DateTime.now();
     // get the start of the week date.
     DateTime startOfWeek = mostRecentMonday(now);
-    int tmp = startOfWeek.day + 7;
 
     if (date.isAfter(startOfWeek) &&
         date.isBefore(startOfWeek.add(const Duration(days: 7)))) {
@@ -152,9 +156,11 @@ CREATE TABLE $tableActivities (
 
     final result = await db.query(tableActivities);
 
+    // retrieve all activities.
     List<Activity> activities =
         result.map((json) => Activity.fromJSON(json)).toList();
 
+    // process activities, return activities for this week only.
     int i = 0;
     while (i < activities.length) {
       if (isWithinThisWeek(activities[i].date)) {

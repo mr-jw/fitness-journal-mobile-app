@@ -17,7 +17,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return SettingsList(
       sections: [
         SettingsSection(
-          title: Text('Display'),
+          title: const Text('Display'),
           tiles: [
             SettingsTile.switchTile(
               leading: const Icon(
@@ -39,7 +39,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
         SettingsSection(
-          title: Text('Privacy and Security'),
+          title: const Text('Privacy and Security'),
           tiles: [
             SettingsTile(
               title: const Text('Clear App data'),

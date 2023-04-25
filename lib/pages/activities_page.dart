@@ -31,14 +31,17 @@ class _ActivityPageState extends State<ActivityPage> {
 
   bool _isLoading = false;
 
-  // page naivgation variables.
+  // list of page naivgation widgets.
   static const List<Widget> _pages = <Widget>[
     AnalyticsPage(),
     ActivityPage(),
     SettingsPage(),
   ];
 
+  // current index.
   int _selectedIndex = 1;
+
+  // method to change current page index.
   void onItemTapped(int index) {
     setState(() {
       if (index == 0) {
@@ -48,7 +51,6 @@ class _ActivityPageState extends State<ActivityPage> {
       } else {
         _appBarTitle = "Settings";
       }
-
       _selectedIndex = index;
     });
   }
